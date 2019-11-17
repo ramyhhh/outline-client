@@ -1,6 +1,6 @@
 {
   "name": "outline-client",
-  "productName": "Outline",
+  "productName": "Outline Pro",
   "scripts": {
     "clean": "rm -rf build www node_modules platforms/* plugins/*",
     "postinstall": "bower install || echo no bower needed",
