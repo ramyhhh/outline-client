@@ -36,6 +36,7 @@
 
 <link rel="import" href="about-view.html">
 <link rel="import" href="add-server-view.html">
+<link rel="import" href="account-view.html">
 <link rel="import" href="feedback-view.html">
 <link rel="import" href="licenses-view.html">
 <link rel="import" href="outline-icons.html">
@@ -49,8 +50,8 @@
     <style>
       :host {
         --app-toolbar-height: 40px;
-        --light-green: #2fbea5;
-        --medium-green: #009688;
+        --light-green: #9850f3;
+        --medium-green: #751bd0;
         --dark-green: #263238;
         --light-gray: #ECECEC;
         --paper-dialog-button-color: var(--medium-green);
@@ -236,6 +237,7 @@
             <img src$="[[rootPath]]assets/outline-client-logo.svg" hidden$="[[!shouldShowAppLogo]]">
             <div hidden$="[[shouldShowAppLogo]]">[[localize(pageTitleKey)]]</div>
           </div>
+          <paper-icon-button id="addBtn" icon="account-circle" on-tap="promptAccount" hidden$="[[!shouldShowAddButton]]"></paper-icon-button>
           <div id="app-toolbar-right">
             <paper-icon-button id="addBtn" icon="add" on-tap="promptAddServer" hidden$="[[!shouldShowAddButton]]"></paper-icon-button>
           </div>
@@ -297,10 +299,10 @@
           <iron-icon icon="outline-icons:outline" slot="item-icon"></iron-icon>
           <span class="item-label">[[localize('servers-menu-item')]]</span>
         </paper-icon-item>
-        <paper-icon-item name="feedback">
+        <!-- <paper-icon-item name="feedback">
           <iron-icon id="feedback-icon" icon="feedback" slot="item-icon"></iron-icon>
           [[localize('feedback-page-title')]]
-        </paper-icon-item>
+        </paper-icon-item> -->
         <paper-icon-item name="about">
           <iron-icon icon="info" slot="item-icon"></iron-icon>
           [[localize('about-page-title')]]
@@ -335,6 +337,7 @@
     </paper-toast>
 
     <add-server-view id="addServerView" localize="[[localize]]"></add-server-view>
+    <account-view id="accountView" localize="[[localize]]"></account-view>
 
     <!-- Modal dialogs must be placed outside of app-header-layout, see
     https://github.com/PolymerElements/paper-dialog/issues/152 and
@@ -595,6 +598,9 @@
       },
       promptAddServer: function () {
         this.$.addServerView.openAddServerSheet();
+      },
+      promptAccount: function() {
+        this.$.accountView.openAccountSheet();
       },
       _computeLanguage: function (LANGUAGES_AVAILABLE, DEFAULT_LANGUAGE) {
         return OutlineI18n.getBestMatchingLanguage(
