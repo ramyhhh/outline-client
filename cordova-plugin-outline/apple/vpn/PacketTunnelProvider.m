@@ -61,7 +61,7 @@ static NSDictionary *kVpnSubnetCandidates;  // Subnets to bind the VPN.
 #if TARGET_OS_IPHONE
   NSString *appGroup = @"group.org.outline.ios.client";
 #else
-  NSString *appGroup = @"QT8Z3Q9V3A.org.outline.macos.client";
+  NSString *appGroup = @"QT8Z3Q9V3A.com.outline.raptor7.macos";
 #endif
   NSURL *containerUrl = [[NSFileManager defaultManager]
                          containerURLForSecurityApplicationGroupIdentifier:appGroup];

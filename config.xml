@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.outline.android.client" version="1.2.12" android-versionCode="28" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.outline.raptor7.android.client" version="1.2.12" android-versionCode="28" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Outline</name>
     <description>
         Internet without borders (powered by Shadowsocks)
@@ -123,9 +123,9 @@
 
     <!-- Sentry error reporting keys -->
     <sentry>
-        <dev dsn="https://319145c481df41458bb6e84c1a99c9ff@sentry.io/159503" />
-        <release dsn="https://6a1e6e7371a64db59f5ba6c34a77d78c@sentry.io/159502" />
-        <dev-native dsn="https://319145c481df41458bb6e84c1a99c9ff:73cc3261d25e44ac90221e7d9ad30b24@sentry.io/159503" />
-        <release-native dsn="https://6a1e6e7371a64db59f5ba6c34a77d78c:568f6c78f9f94f91afba4aba05756001@sentry.io/159502" />
+        <dev dsn="https://8d872c01a5534f00b0b9e61f462c7108@sentry.io/1826685" />
+        <release dsn="https://8d872c01a5534f00b0b9e61f462c7108@sentry.io/1826685" />
+        <dev-native dsn="https://8d872c01a5534f00b0b9e61f462c7108@sentry.io/1826685" />
+        <release-native dsn="https://8d872c01a5534f00b0b9e61f462c7108@sentry.io/1826685" />
     </sentry>
 </widget>
