@@ -83,5 +83,13 @@
   "undo-button-label": "Undo",
   "unreachable-server-state": "Unreachable",
   "update-downloaded": "An updated version of Outline has been downloaded. It will be installed when you restart Outline.",
-  "version": "Version {appVersion}"
+  "version": "Version {appVersion}",
+
+  "account": "Account",
+  "account-instructions": "Login to your account to automatically download your list of servers!",
+  "email" : "Email",
+  "email-sent": "Check your email address!",
+  "forget": "If you forget your password, click the reset password link!",
+  "reset": "Reset Password",
+  "welcome": "Welcome “{username}”, your VPN servers will update automatically!"
 }

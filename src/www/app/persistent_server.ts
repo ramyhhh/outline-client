@@ -59,6 +59,7 @@ export class PersistentServerRepository implements ServerRepository {
     this.serverById.set(server.id, server);
     this.storeServers();
     this.eventQueue.enqueue(new events.ServerAdded(server));
+    return server;
   }
 
   rename(serverId: string, newName: string) {

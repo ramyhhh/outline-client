@@ -19,7 +19,7 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
-<dom-module id="account-view">
+<dom-module id="login-view">
   <template>
     <style>
       :host {
@@ -108,7 +108,7 @@
         ;
       }
 
-      #accountSheet paper-input {
+      #loginSheet paper-input {
         --paper-input-container-label: {
           color: rgba(0, 0, 0, 0.30);
         }
@@ -159,14 +159,21 @@
       }
     </style>
 
-    <paper-dialog id="accountSheet" with-backdrop>
+    <paper-dialog id="loginSheet" with-backdrop>
       <div class="vertical-margin">
         <div class="title">[[localize('account')]]</div>
-        <div class="faded">[[localize('welcome','username',user)]]</div>
+        <div class="faded">[[localize('account-instructions')]]</div>
       </div>
-      
+      <paper-input id="emailInput" class="shadow" label="[[localize('email')]]" no-label-float value={{email}}>
+        <iron-icon icon="communication:email" slot="suffix"></iron-icon>
+      </paper-input>
+      <paper-input id="passwordInput" type="password" class="shadow" label="[[localize('password')]]" no-label-float
+        value={{password}}>
+        <iron-icon icon="icons:lock" slot="suffix"></iron-icon>
+      </paper-input>
+      <div class="faded">[[localize('forget')]] <a class="primary" on-tap="_reset">[[localize('reset')]]</a></div>
       <div class="button-container">
-        <paper-button raised class="primary" on-tap="_logout">[[localize('logout')]]</paper-button>
+        <paper-button raised class="primary" on-tap="_login">[[localize('login')]]</paper-button>
         <paper-button class="faded" on-tap="close">[[localize('close')]]</paper-button>
       </div>
 
@@ -176,24 +183,23 @@
   <script>
     'use strict';
     Polymer({
-      is: 'account-view',
+      is: 'login-view',
       properties: {
         localize: Function,
         serverConfig: Object,
-        user: String
+        email: String,
+        password: String
       },
       ready: function () {
-        this.$.accountSheet.addEventListener('opened-changed', this._openChanged.bind(this));
+        this.$.loginSheet.addEventListener('opened-changed', this._openChanged.bind(this));
         // Workaround for --paper-input-container-input-[focus|invalid] not getting applied.
         // See https://github.com/PolymerElements/paper-input/issues/546.
-
-        this.user = localStorage.getItem('email');
       },
-      openAccountSheet: function () {
-        this.$.accountSheet.open();
+      openSheet: function () {
+        this.$.loginSheet.open();
       },
       close: function () {
-        this.$.accountSheet.close();
+        this.$.loginSheet.close();
       },
       // Event listeners
       _openChanged: function (event) {
@@ -207,7 +213,7 @@
         } else {
           // Restore scrolling and reset the state.
           document.body.removeEventListener('touchmove', this._disallowScroll, { passive: false });
-          if (dialog.id == 'accountSheet') {
+          if (dialog.id == 'loginSheet') {
             this.accessKey = '';
           }
         }
@@ -215,8 +221,12 @@
       _disallowScroll: function (event) {
         event.preventDefault();
       },
-      _logout: function () {
-        this.fire('Logout');
+      _login: function () {
+        this.fire('Login', { email: this.email, password: this.password });
+        this.close();
+      },
+      _reset: function() {
+        this.fire('RequestReset', { email: this.email, password: this.password });
         this.close();
       }
     });

@@ -55,7 +55,7 @@ public class VpnTunnelService extends VpnService {
   private static final Logger LOG = Logger.getLogger(VpnTunnelService.class.getName());
   private static final int THREAD_POOL_SIZE = 5;
   private static final int NOTIFICATION_SERVICE_ID = 1;
-  private static final int NOTIFICATION_COLOR = 0x00BFA5;
+  private static final int NOTIFICATION_COLOR = 0x751bd0;
   private static final String NOTIFICATION_CHANNEL_ID = "outline-vpn";
   private static final String CONNECTION_ID_KEY = "id";
   private static final String CONNECTION_CONFIG_KEY = "config";

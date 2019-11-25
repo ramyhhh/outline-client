@@ -90,6 +90,8 @@ export class App {
     // Register handlers for events fired by Polymer components.
     this.rootEl.addEventListener('Login', this.login.bind(this));
     this.rootEl.addEventListener('Logout', this.logout.bind(this));
+    this.rootEl.addEventListener('RequestReset', this.requestReset.bind(this));
+    this.rootEl.addEventListener('Reset', this.reset.bind(this));
     this.rootEl.addEventListener('PromptAddServerRequested', this.requestPromptAddServer.bind(this));
     this.rootEl.addEventListener('AddServerConfirmationRequested', this.requestAddServerConfirmation.bind(this));
     this.rootEl.addEventListener('AddServerRequested', this.requestAddServer.bind(this));
@@ -124,10 +126,7 @@ export class App {
     this.pullClipboardText();
 
 
-    setTimeout(() => {
-
-      this.refresh();
-    }, 2000);
+    setTimeout(() => { this.refresh(); }, 1000);
   }
 
   showLocalizedError(e?: Error, toastDuration = 10000) {
@@ -269,6 +268,10 @@ export class App {
     this.rootEl.promptAddServer();
   }
 
+
+
+
+
   private async login(event: CustomEvent) {
     try {
       const { email, password } = event.detail;
@@ -284,6 +287,8 @@ export class App {
       localStorage.setItem('token', tokens.access_token);
       localStorage.setItem('refresh_token', tokens.refresh_token);
 
+      await this.refresh();
+
     } catch (err) {
       this.changeToDefaultPage();
       this.showLocalizedError(err);
@@ -292,8 +297,11 @@ export class App {
 
   private async refresh() {
     try {
-      const accessToken = await this.refreshAuth();
+
       const id = localStorage.getItem('id') || '';
+      if (!id) return;
+      const accessToken = await this.refreshAuth();
+      const my = JSON.parse(localStorage.getItem('my') || '[]');
       const servers = await this.fetchServers(id, accessToken);
       console.log('FETCHED SERVERS', servers);
       servers.forEach(s => {
@@ -308,12 +316,16 @@ export class App {
         };
 
         if (!this.serverRepo.containsServer(serverConfig)) {
-          try { this.serverRepo.add(serverConfig); }
+          try {
+            const server = this.serverRepo.add(serverConfig);
+            my.push(server.id);
+          }
           catch (err) { console.log('ADDING TO SERVER REPO', err); }
         }
 
       });
 
+      localStorage.setItem('my', JSON.stringify(my));
 
     } catch (err) {
       this.changeToDefaultPage();
@@ -345,6 +357,31 @@ export class App {
     localStorage.removeItem('email');
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
+
+    //remove installed server
+    const my = JSON.parse(localStorage.getItem('my') || '[]') as any[];
+    my.forEach(id => {
+      this.serverRepo.forget(id);
+    });
+    localStorage.removeItem('my');
+  }
+
+  private requestReset() {
+    this.rootEl.$.resetView.openSheet();
+  }
+  private async reset(event: CustomEvent) {
+    try {
+      const email = event.detail.email;
+      const http = new XMLHttpRequest();
+      http.open('POST', 'https://outline.raptor7.com/auth/forgotpassword', true);
+      http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+      const response = await makeRequest(http, JSON.stringify({ email }));
+      this.rootEl.showToast(this.localize('email-sent'), 3000);
+
+    } catch (err) {
+      this.changeToDefaultPage();
+      this.showLocalizedError(err);
+    }
   }
 
 
@@ -652,8 +689,9 @@ function makeRequest<T = any>(xhr: XMLHttpRequest, body?: string): Promise<T> {
   return new Promise((resolve, reject) => {
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        const result = JSON.parse(xhr.responseText);
-        resolve(result);
+        const contentType = xhr.getResponseHeader("Content-Type");
+        if (contentType && contentType.indexOf('json') > -1) resolve(JSON.parse(xhr.responseText));
+        else resolve(xhr.responseText as any);
       } else {
         reject({
           status: xhr.status,
